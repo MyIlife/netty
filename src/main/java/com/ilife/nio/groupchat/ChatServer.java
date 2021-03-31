@@ -62,16 +62,16 @@ public class ChatServer {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             int count = channel.read(buffer);
             //
-            if(count>0){ //读取到数据
+            if (count > 0) { //读取到数据
                 String msg = new String(buffer.array());
-                System.out.println("收到客户端【"+channel.getRemoteAddress()+"】消息："+ msg);
-                this.sendMsgToOthers(msg,channel);
+                System.out.println("收到客户端【" + channel.getRemoteAddress() + "】消息：" + msg);
+                this.sendMsgToOthers(msg, channel);
             }
         } catch (Exception e) {
             try {
-                System.out.println(channel.getRemoteAddress()+" 离线了");
+                System.out.println(channel.getRemoteAddress() + " 离线了");
                 // 离线处理
-                key.cancel();;
+                key.cancel();
                 channel.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -81,14 +81,15 @@ public class ChatServer {
 
     /**
      * 给其他channel发送
+     *
      * @param msg
      * @param self 排除自己
      */
-    private void sendMsgToOthers(String msg,SocketChannel self) throws  Exception{
-        System.out.println("服务器转发【"+self.getRemoteAddress()+"】的消息");
-        for (SelectionKey key : selector.keys()){
+    private void sendMsgToOthers(String msg, SocketChannel self) throws Exception {
+        System.out.println("服务器转发【" + self.getRemoteAddress() + "】的消息");
+        for (SelectionKey key : selector.keys()) {
             Channel channel = key.channel();
-            if(channel instanceof SocketChannel && channel!=self){
+            if (channel instanceof SocketChannel && channel != self) {
                 SocketChannel socketChannel = (SocketChannel) channel;
                 ByteBuffer byteBuffer = ByteBuffer.wrap(msg.getBytes());
                 // 将buffer的数据写入通道
@@ -96,6 +97,7 @@ public class ChatServer {
             }
         }
     }
+
     public static void main(String[] args) {
         ChatServer server = new ChatServer();
         server.listen();

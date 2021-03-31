@@ -5,21 +5,21 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Set;
 
-public class ChatClient1 {
+public class ChatClient {
     private static final String HOST = "localhost";
     private static final int PORT = 6667;
     private Selector selector;
     private SocketChannel socketChannel;
-    private String userName = "user1111111111111111111111";
+    private String userName;
 
-    public ChatClient1() {
+    public ChatClient() {
         try {
             selector = Selector.open();
             socketChannel = socketChannel.open(new InetSocketAddress(HOST,PORT));
             socketChannel.configureBlocking(false);
-            System.out.println(userName + " is ok");
+            userName = socketChannel.getLocalAddress().toString().substring(1);
+            System.out.println(userName + " is ok...");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,10 +45,11 @@ public class ChatClient1 {
                         SocketChannel channel = (SocketChannel) key.channel();
                         ByteBuffer buffer = ByteBuffer.allocate(1024);
                         channel.write(buffer);
-                        System.out.println(new String(buffer.array()).trim());
+                        String s = new String(buffer.array());
+                        System.out.println(s.trim());
                     }
-                    iterator.remove();
                 }
+                iterator.remove();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +58,7 @@ public class ChatClient1 {
 
     public static void main(String[] args) {
         // 启动客户端
-        ChatClient1 c = new ChatClient1();
+        ChatClient c = new ChatClient();
         new Thread() {
             public void run() {
                 while (true) {
