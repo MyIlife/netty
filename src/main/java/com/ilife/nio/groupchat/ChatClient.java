@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String HOST = "localhost";
+    private static final String HOST = "127.0.0.1";
     private static final int PORT = 6667;
     private Selector selector;
     private SocketChannel socketChannel;
@@ -18,6 +18,8 @@ public class ChatClient {
             selector = Selector.open();
             socketChannel = socketChannel.open(new InetSocketAddress(HOST,PORT));
             socketChannel.configureBlocking(false);
+            //将channel 注册到selector
+            socketChannel.register(selector, SelectionKey.OP_READ);
             userName = socketChannel.getLocalAddress().toString().substring(1);
             System.out.println(userName + " is ok...");
         } catch (Exception e) {
@@ -44,12 +46,12 @@ public class ChatClient {
                     if (key.isReadable()) {
                         SocketChannel channel = (SocketChannel) key.channel();
                         ByteBuffer buffer = ByteBuffer.allocate(1024);
-                        channel.write(buffer);
+                        channel.read(buffer);
                         String s = new String(buffer.array());
                         System.out.println(s.trim());
                     }
+                    iterator.remove();
                 }
-                iterator.remove();
             }
         } catch (Exception e) {
             e.printStackTrace();

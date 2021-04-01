@@ -2,7 +2,6 @@ package com.ilife.nio.groupchat;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
@@ -47,7 +46,6 @@ public class ChatServer {
                         // 删除当前key防止重复操作
                         iterator.remove();
                     }
-
                 }
             }
         } catch (Exception e) {
