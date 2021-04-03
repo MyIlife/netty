@@ -60,7 +60,7 @@ public class ChatClient {
 
     public static void main(String[] args) {
         // 启动客户端
-        ChatClient c = new ChatClient();
+        final ChatClient c = new ChatClient();
         new Thread() {
             public void run() {
                 while (true) {

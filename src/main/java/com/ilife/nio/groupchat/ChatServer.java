@@ -26,6 +26,7 @@ public class ChatServer {
     }
 
     public void listen() {
+        System.out.println("监听线程: " + Thread.currentThread().getName());
         try {
             while (true) {
                 int count = selector.select();
@@ -84,6 +85,7 @@ public class ChatServer {
      * @param self 排除自己
      */
     private void sendMsgToOthers(String msg, SocketChannel self) throws Exception {
+        System.out.println("发送线程: " + Thread.currentThread().getName());
         System.out.println("服务器转发【" + self.getRemoteAddress() + "】的消息");
         for (SelectionKey key : selector.keys()) {
             Channel channel = key.channel();
